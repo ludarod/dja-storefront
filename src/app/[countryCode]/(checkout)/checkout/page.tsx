@@ -1,4 +1,4 @@
-import { retrieveCart } from "@lib/data/cart"
+import { getOrSetCart } from "@lib/data/cart"
 import { retrieveCustomer } from "@lib/data/customer"
 import { getLocale } from "@lib/data/locale-actions"
 import { resolveUILanguage, ui } from "@lib/i18n/ui"
@@ -16,8 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function Checkout() {
-  const cart = await retrieveCart()
+export default async function Checkout(props: {
+  params: Promise<{ countryCode: string }>
+}) {
+  const params = await props.params
+  const { countryCode } = params
+
+  const cart = await getOrSetCart(countryCode)
 
   if (!cart) {
     return notFound()

@@ -24,7 +24,7 @@ import { getLocale } from "@lib/data/locale-actions"
 export async function retrieveCart(cartId?: string, fields?: string) {
   const id = cartId || (await getCartId())
   fields ??=
-    "*items, *region, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name"
+    "*items, *region, *payment_collection, *payment_collection.payment_sessions, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name"
 
   if (!id) {
     return null
@@ -84,6 +84,11 @@ export async function getOrSetCart(countryCode: string) {
     await sdk.store.cart.update(cart.id, { region_id: region.id }, {}, headers)
     const cartCacheTag = await getCacheTag("carts")
     revalidateTag(cartCacheTag)
+    return await retrieveCart(cart.id)
+  }
+
+  if (cart && !cart.region) {
+    return await retrieveCart(cart.id)
   }
 
   return cart

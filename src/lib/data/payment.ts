@@ -24,7 +24,8 @@ export const listCartPaymentMethods = async (regionId: string) => {
         return a.id > b.id ? 1 : -1
       })
     )
-    .catch(() => {
+    .catch((error) => {
+      console.error("Error listing cart payment methods:", error)
       return null
     })
 }

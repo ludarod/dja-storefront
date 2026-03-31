@@ -25,7 +25,12 @@ export default async function CheckoutForm({
     getLocale(),
   ])
 
+  console.log("CheckoutForm: cart.region?.id", cart.region?.id)
+  console.log("CheckoutForm: shippingMethods", shippingMethods?.length)
+  console.log("CheckoutForm: paymentMethods", paymentMethods?.length)
+
   if (!shippingMethods || !paymentMethods) {
+    console.log("CheckoutForm: missing methods, returning null")
     return null
   }
 
