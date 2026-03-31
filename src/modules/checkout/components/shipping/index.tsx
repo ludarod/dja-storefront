@@ -212,6 +212,15 @@ const Shipping: React.FC<ShippingProps> = ({
             </div>
             <div data-testid="delivery-options-container">
               <div className="pb-8 md:pt-0 pt-2">
+                {_shippingMethods?.length === 0 && (
+                  <div className="p-4 border border-amber-200 bg-amber-50 rounded-md">
+                    <Text className="text-amber-700">
+                      {uiLanguage === "es" 
+                        ? "No hay métodos de envío disponibles para Cuba. Por favor, verifica que tus productos tengan stock en la ubicación de Cuba y que el método de envío esté asignado a la región Americas." 
+                        : "No shipping methods available for Cuba. Please verify product stock in Cuba location and shipping method assignment to Americas region."}
+                    </Text>
+                  </div>
+                )}
                 {hasPickupOptions && (
                   <RadioGroup
                     value={showPickupOptions}
