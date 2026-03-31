@@ -1,6 +1,6 @@
 "use client"
 
-import { isManual } from "@lib/constants"
+import { isManual, isMercadoPago } from "@lib/constants"
 import { placeOrder } from "@lib/data/cart"
 import { ui, UILanguage } from "@lib/i18n/ui"
 import { HttpTypes } from "@medusajs/types"
@@ -34,6 +34,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
 
   switch (true) {
     case isManual(paymentSession?.provider_id):
+    case isMercadoPago(paymentSession?.provider_id):
       return (
         <ManualTestPaymentButton
           notReady={notReady}

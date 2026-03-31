@@ -22,25 +22,32 @@ export default async function ProductRail({
     },
   })
 
-  if (!pricedProducts) {
+  if (!pricedProducts?.length) {
     return null
   }
 
+  const spotlightProducts = pricedProducts.slice(0, 3)
   return (
-    <div className="content-container py-12 small:py-24">
-      <div className="flex justify-between mb-8">
-        <Text className="txt-xlarge">{collection.title}</Text>
+    <div className="content-container py-10 small:py-16">
+      <div className="flex flex-col gap-2 small:flex-row small:items-end small:justify-between mb-6">
+        <div>
+          <Text className="text-2xl font-black uppercase tracking-[5px]">
+            {collection.title}
+          </Text>
+          <p className="text-[0.65rem] uppercase tracking-[3px] text-ui-fg-subtle mt-1">
+            Productos destacados
+          </p>
+        </div>
         <InteractiveLink href={`/collections/${collection.handle}`}>
-          View all
+          Ver catálogo
         </InteractiveLink>
       </div>
-      <ul className="grid grid-cols-2 small:grid-cols-3 gap-x-6 gap-y-24 small:gap-y-36">
-        {pricedProducts &&
-          pricedProducts.map((product) => (
-            <li key={product.id}>
-              <ProductPreview product={product} region={region} isFeatured />
-            </li>
-          ))}
+      <ul className="grid grid-cols-1 small:grid-cols-2 lg:grid-cols-3 gap-6">
+        {spotlightProducts.map((product) => (
+          <li key={product.id}>
+            <ProductPreview product={product} region={region} isFeatured />
+          </li>
+        ))}
       </ul>
     </div>
   )

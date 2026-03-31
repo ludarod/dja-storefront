@@ -21,6 +21,14 @@ module.exports = {
         padding: "padding-top padding-right padding-bottom padding-left",
       },
       colors: {
+        gold: {
+          DEFAULT: "#D4AF37",
+        },
+        luxury: {
+          black: "#111111",
+          white: "#FFFFFF",
+          gray: "#F5F5F5",
+        },
         grey: {
           0: "#FFFFFF",
           5: "#F9FAFB",

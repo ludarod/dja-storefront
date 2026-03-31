@@ -3,6 +3,7 @@ import { Badge, Button, clx } from "@medusajs/ui"
 import { useEffect } from "react"
 
 import useToggleState from "@lib/hooks/use-toggle-state"
+import { ui, UILanguage } from "@lib/i18n/ui"
 import { useFormStatus } from "react-dom"
 
 type AccountInfoProps = {
@@ -12,6 +13,7 @@ type AccountInfoProps = {
   isError?: boolean
   errorMessage?: string
   clearState: () => void
+  uiLanguage: UILanguage
   children?: React.ReactNode
   'data-testid'?: string
 }
@@ -22,10 +24,12 @@ const AccountInfo = ({
   isSuccess,
   isError,
   clearState,
-  errorMessage = "An error occurred, please try again",
+  errorMessage,
+  uiLanguage,
   children,
   'data-testid': dataTestid
 }: AccountInfoProps) => {
+  const t = ui(uiLanguage)
   const { state, close, toggle } = useToggleState()
 
   const { pending } = useFormStatus()
@@ -63,7 +67,7 @@ const AccountInfo = ({
             data-testid="edit-button"
             data-active={state}
           >
-            {state ? "Cancel" : "Edit"}
+            {state ? t.cancel : t.edit}
           </Button>
         </div>
       </div>
@@ -82,7 +86,7 @@ const AccountInfo = ({
           data-testid="success-message"
         >
           <Badge className="p-2 my-4" color="green">
-            <span>{label} updated succesfully</span>
+            <span>{`${label} ${t.updateSuccessSuffix}`}</span>
           </Badge>
         </Disclosure.Panel>
       </Disclosure>
@@ -101,7 +105,7 @@ const AccountInfo = ({
           data-testid="error-message"
         >
           <Badge className="p-2 my-4" color="red">
-            <span>{errorMessage}</span>
+            <span>{errorMessage || t.genericErrorTryAgain}</span>
           </Badge>
         </Disclosure.Panel>
       </Disclosure>
@@ -126,7 +130,7 @@ const AccountInfo = ({
                 type="submit"
                 data-testid="save-button"
               >
-                Save changes
+                {t.saveChanges}
               </Button>
             </div>
           </div>

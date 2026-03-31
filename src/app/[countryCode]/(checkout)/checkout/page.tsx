@@ -1,13 +1,19 @@
 import { retrieveCart } from "@lib/data/cart"
 import { retrieveCustomer } from "@lib/data/customer"
+import { getLocale } from "@lib/data/locale-actions"
+import { resolveUILanguage, ui } from "@lib/i18n/ui"
 import PaymentWrapper from "@modules/checkout/components/payment-wrapper"
 import CheckoutForm from "@modules/checkout/templates/checkout-form"
 import CheckoutSummary from "@modules/checkout/templates/checkout-summary"
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-export const metadata: Metadata = {
-  title: "Checkout",
+export async function generateMetadata(): Promise<Metadata> {
+  const language = resolveUILanguage(await getLocale())
+  const t = ui(language)
+  return {
+    title: t.checkout,
+  }
 }
 
 export default async function Checkout() {

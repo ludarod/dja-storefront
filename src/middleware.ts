@@ -32,7 +32,7 @@ async function getRegionMap(cacheId: string) {
         revalidate: 3600,
         tags: [`regions-${cacheId}`],
       },
-      cache: "force-cache",
+      cache: "no-store",
     }).then(async (response) => {
       const json = await response.json()
 
@@ -50,6 +50,7 @@ async function getRegionMap(cacheId: string) {
     }
 
     // Create a map of country codes to regions.
+    regionMapCache.regionMap.clear()
     regions.forEach((region: HttpTypes.StoreRegion) => {
       region.countries?.forEach((c) => {
         regionMapCache.regionMap.set(c.iso_2 ?? "", region)
@@ -144,11 +145,19 @@ export async function middleware(request: NextRequest) {
   const redirectPath =
     request.nextUrl.pathname === "/" ? "" : request.nextUrl.pathname
 
+  const pathSegments = request.nextUrl.pathname.split("/").filter(Boolean)
+  const firstSegment = pathSegments[0]?.toLowerCase()
+  const hasCountryLikePrefix = Boolean(firstSegment?.match(/^[a-z]{2}$/))
+  const normalizedRedirectPath =
+    hasCountryLikePrefix && !regionMap.has(firstSegment)
+      ? `/${pathSegments.slice(1).join("/")}`.replace(/\/$/, "") || ""
+      : redirectPath
+
   const queryString = request.nextUrl.search ? request.nextUrl.search : ""
 
   // If no country code is set, we redirect to the relevant region.
   if (!urlHasCountryCode && countryCode) {
-    redirectUrl = `${request.nextUrl.origin}/${countryCode}${redirectPath}${queryString}`
+    redirectUrl = `${request.nextUrl.origin}/${countryCode}${normalizedRedirectPath}${queryString}`
     response = NextResponse.redirect(`${redirectUrl}`, 307)
   } else if (!urlHasCountryCode && !countryCode) {
     // Handle case where no valid country code exists (empty regions)

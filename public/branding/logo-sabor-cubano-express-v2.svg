@@ -1,0 +1,49 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldGrad" x1="290" y1="180" x2="910" y2="980" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E2BE55"/>
+      <stop offset="1" stop-color="#C8941B"/>
+    </linearGradient>
+    <filter id="softShadow" x="110" y="110" width="980" height="980" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="8"/>
+      <feGaussianBlur stdDeviation="10"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.066 0 0 0 0 0.066 0 0 0 0 0.066 0 0 0 0.16 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1" result="shape"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#softShadow)">
+    <circle cx="600" cy="590" r="470" fill="#F5F5F5"/>
+    <circle cx="600" cy="590" r="469" stroke="#E5E7EB"/>
+  </g>
+
+  <!-- Store icon replacing palm -->
+  <g transform="translate(470 168) scale(0.62)" stroke="url(#goldGrad)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M10 92 L58 20 H332 L380 92"/>
+    <path d="M10 92 H380"/>
+    <path d="M10 92 C10 122 34 146 64 146 C94 146 118 122 118 92"/>
+    <path d="M118 92 C118 122 142 146 172 146 C202 146 226 122 226 92"/>
+    <path d="M226 92 C226 122 250 146 280 146 C310 146 334 122 334 92"/>
+    <path d="M334 92 C334 122 358 146 380 146"/>
+    <rect x="38" y="146" width="314" height="122" rx="14"/>
+    <rect x="84" y="184" width="96" height="84" rx="8"/>
+    <rect x="236" y="188" width="62" height="52" rx="10"/>
+  </g>
+
+  <!-- Brand text -->
+  <text x="600" y="520" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="132" font-weight="900" fill="url(#goldGrad)" letter-spacing="6">SABOR</text>
+  <text x="600" y="646" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="132" font-weight="900" fill="url(#goldGrad)" letter-spacing="6">CUBANO</text>
+
+  <!-- EXPRESS bar using current dark brand color -->
+  <path d="M212 676 H988 L940 790 H260 Z" fill="#111111"/>
+  <text x="600" y="770" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="96" font-weight="900" fill="#FFFFFF" letter-spacing="5">EXPRESS</text>
+
+  <!-- Star + waves -->
+  <path d="M332 848 L346 886 H386 L354 909 L366 946 L332 922 L298 946 L310 909 L278 886 H318 Z" fill="url(#goldGrad)"/>
+  <path d="M432 864 C520 824 650 824 760 850 C810 862 864 860 906 842" stroke="url(#goldGrad)" stroke-width="18" stroke-linecap="round"/>
+  <path d="M428 920 C522 878 654 878 760 904 C808 916 856 912 900 894" stroke="url(#goldGrad)" stroke-width="18" stroke-linecap="round"/>
+</svg>

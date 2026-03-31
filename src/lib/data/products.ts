@@ -53,36 +53,70 @@ export const listProducts = async ({
     ...(await getCacheOptions("products")),
   }
 
-  return sdk.client
-    .fetch<{ products: HttpTypes.StoreProduct[]; count: number }>(
+  const fields =
+    "*variants.calculated_price,+variants.inventory_quantity,*variants.images,+metadata,+tags,"
+
+  const defaultQuery = {
+    limit,
+    offset,
+    region_id: region?.id,
+    fields,
+    ...queryParams,
+  }
+
+  const fetchDefaultProducts = async () =>
+    sdk.client.fetch<{ products: HttpTypes.StoreProduct[]; count: number }>(
       `/store/products`,
       {
         method: "GET",
-        query: {
-          limit,
-          offset,
-          region_id: region?.id,
-          fields:
-            "*variants.calculated_price,+variants.inventory_quantity,*variants.images,+metadata,+tags,",
-          ...queryParams,
-        },
+        query: defaultQuery,
         headers,
         next,
-        cache: "force-cache",
+        cache: "no-store",
       }
     )
-    .then(({ products, count }) => {
-      const nextPage = count > offset + limit ? pageParam + 1 : null
 
-      return {
-        response: {
-          products,
-          count,
-        },
-        nextPage: nextPage,
-        queryParams,
+  // If a free-text query exists, prefer Meilisearch endpoint when available.
+  // Fallback to Medusa's native /store/products?q=... so search never breaks.
+  const fetchProducts = async () => {
+    if (queryParams?.q) {
+      try {
+        return await sdk.client.fetch<{
+          products: HttpTypes.StoreProduct[]
+          count: number
+        }>(`/store/meilisearch/products`, {
+          method: "GET",
+          query: {
+            query: String(queryParams.q),
+            limit,
+            offset,
+            region_id: region?.id,
+            fields,
+          },
+          headers,
+          next,
+          cache: "no-store",
+        })
+      } catch {
+        return fetchDefaultProducts()
       }
-    })
+    }
+
+    return fetchDefaultProducts()
+  }
+
+  return fetchProducts().then(({ products, count }) => {
+    const nextPage = count > offset + limit ? pageParam + 1 : null
+
+    return {
+      response: {
+        products,
+        count,
+      },
+      nextPage: nextPage,
+      queryParams,
+    }
+  })
 }
 
 /**
@@ -96,13 +130,13 @@ export const listProductsWithSort = async ({
   countryCode,
 }: {
   page?: number
-  queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
+  queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductListParams
   sortBy?: SortOptions
   countryCode: string
 }): Promise<{
   response: { products: HttpTypes.StoreProduct[]; count: number }
   nextPage: number | null
-  queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
+  queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductListParams
 }> => {
   const limit = queryParams?.limit || 12
 
@@ -117,7 +151,7 @@ export const listProductsWithSort = async ({
     countryCode,
   })
 
-  const sortedProducts = sortProducts(products, sortBy)
+  const sortedProducts = queryParams?.q ? products : sortProducts(products, sortBy)
 
   const pageParam = (page - 1) * limit
 

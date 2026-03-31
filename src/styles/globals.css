@@ -109,4 +109,32 @@
   .text-3xl-semi {
     @apply text-[32px] leading-[44px] font-semibold;
   }
+
+  .luxury-btn {
+    @apply bg-luxury-black text-luxury-white px-4 py-3 font-black uppercase transition-colors duration-300 w-full hover:bg-gold hover:text-luxury-black;
+  }
+
+  .btn-primary-luxury {
+    @apply bg-gold text-luxury-black border-none px-6 py-3 font-bold cursor-pointer transition-all duration-300 uppercase tracking-widest hover:bg-luxury-black hover:text-gold;
+  }
+
+  .gold-text {
+    @apply text-gold;
+  }
+
+  .brand-logo-text {
+    @apply uppercase tracking-widest font-black;
+  }
+
+  .luxury-card {
+    @apply bg-luxury-white border border-[#eee] overflow-hidden transition-all duration-300 flex flex-col hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)];
+  }
+
+  .whatsapp-float {
+    @apply fixed bottom-[30px] right-[30px] bg-[#25d366] text-white w-[60px] h-[60px] rounded-full flex items-center justify-center z-[1000] shadow-lg hover:scale-110 transition-transform duration-300;
+  }
+}
+
+h1, h2, h3 {
+  @apply uppercase tracking-widest font-black;
 }

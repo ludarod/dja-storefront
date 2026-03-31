@@ -1,6 +1,7 @@
 "use server"
 
 import { sdk } from "@lib/config"
+import { listMyOrders } from "@lib/data/custom"
 import medusaError from "@lib/util/medusa-error"
 import { getAuthHeaders, getCacheOptions } from "./cookies"
 import { HttpTypes } from "@medusajs/types"
@@ -34,6 +35,10 @@ export const listOrders = async (
   offset: number = 0,
   filters?: Record<string, any>
 ) => {
+  try {
+    return await listMyOrders(limit, offset)
+  } catch {}
+
   const headers = {
     ...(await getAuthHeaders()),
   }

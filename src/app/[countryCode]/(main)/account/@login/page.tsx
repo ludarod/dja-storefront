@@ -1,12 +1,19 @@
+import { getLocale } from "@lib/data/locale-actions"
+import { resolveUILanguage, ui } from "@lib/i18n/ui"
+import LoginTemplate from "@modules/account/templates/login-template"
 import { Metadata } from "next"
 
-import LoginTemplate from "@modules/account/templates/login-template"
+export async function generateMetadata(): Promise<Metadata> {
+  const language = resolveUILanguage(await getLocale())
+  const t = ui(language)
 
-export const metadata: Metadata = {
-  title: "Sign in",
-  description: "Sign in to your Medusa Store account.",
+  return {
+    title: t.signIn,
+    description: t.signInMetaDescription,
+  }
 }
 
-export default function Login() {
-  return <LoginTemplate />
+export default async function Login() {
+  const language = resolveUILanguage(await getLocale())
+  return <LoginTemplate uiLanguage={language} />
 }

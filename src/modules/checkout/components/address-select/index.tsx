@@ -6,6 +6,7 @@ import { Fragment, useMemo } from "react"
 import Radio from "@modules/common/components/radio"
 import compareAddresses from "@lib/util/compare-addresses"
 import { HttpTypes } from "@medusajs/types"
+import { ui, UILanguage } from "@lib/i18n/ui"
 
 type AddressSelectProps = {
   addresses: HttpTypes.StoreCustomerAddress[]
@@ -14,13 +15,17 @@ type AddressSelectProps = {
     address: HttpTypes.StoreCartAddress | undefined,
     email?: string
   ) => void
+  uiLanguage: UILanguage
 }
 
 const AddressSelect = ({
   addresses,
   addressInput,
   onSelect,
+  uiLanguage,
 }: AddressSelectProps) => {
+  const t = ui(uiLanguage)
+
   const handleSelect = (id: string) => {
     const savedAddress = addresses.find((a) => a.id === id)
     if (savedAddress) {
@@ -42,9 +47,7 @@ const AddressSelect = ({
           {({ open }) => (
             <>
               <span className="block truncate">
-                {selectedAddress
-                  ? selectedAddress.address_1
-                  : "Choose an address"}
+                {selectedAddress ? selectedAddress.address_1 : t.chooseAddress}
               </span>
               <ChevronUpDown
                 className={clx("transition-rotate duration-200", {
@@ -89,9 +92,7 @@ const AddressSelect = ({
                       <div className="flex flex-col text-left text-base-regular mt-2">
                         <span>
                           {address.address_1}
-                          {address.address_2 && (
-                            <span>, {address.address_2}</span>
-                          )}
+                          {address.address_2 && <span>, {address.address_2}</span>}
                         </span>
                         <span>
                           {address.postal_code}, {address.city}

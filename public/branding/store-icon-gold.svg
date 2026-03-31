@@ -1,0 +1,18 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="storeIconGold" x1="8" y1="8" x2="88" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E2BE55"/>
+      <stop offset="1" stop-color="#C8941B"/>
+    </linearGradient>
+  </defs>
+  <g stroke="url(#storeIconGold)" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M10 34 L22 14 H74 L86 34"/>
+    <path d="M10 34 H86"/>
+    <path d="M10 34 C10 41 16 47 23 47 C30 47 36 41 36 34"/>
+    <path d="M36 34 C36 41 42 47 49 47 C56 47 62 41 62 34"/>
+    <path d="M62 34 C62 41 68 47 75 47 C82 47 86 41 86 34"/>
+    <rect x="17" y="47" width="62" height="34" rx="5"/>
+    <rect x="26" y="58" width="19" height="23" rx="3"/>
+    <rect x="56" y="58" width="14" height="12" rx="3"/>
+  </g>
+</svg>

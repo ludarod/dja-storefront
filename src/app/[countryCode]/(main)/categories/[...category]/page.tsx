@@ -2,6 +2,8 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getCategoryByHandle, listCategories } from "@lib/data/categories"
+import { getLocale } from "@lib/data/locale-actions"
+import { resolveUILanguage, ui } from "@lib/i18n/ui"
 import { listRegions } from "@lib/data/regions"
 import { StoreRegion } from "@medusajs/types"
 import CategoryTemplate from "@modules/categories/templates"
@@ -46,13 +48,17 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params
   try {
     const productCategory = await getCategoryByHandle(params.category)
+    const currentLocale = await getLocale()
+    const language = resolveUILanguage(currentLocale)
+    const t = ui(language)
 
-    const title = productCategory.name + " | Medusa Store"
+    const title = `${productCategory.name} | ${t.metaStoreName}`
 
-    const description = productCategory.description ?? `${title} category.`
+    const description =
+      productCategory.description ?? `${productCategory.name} ${t.categorySuffix}.`
 
     return {
-      title: `${title} | Medusa Store`,
+      title,
       description,
       alternates: {
         canonical: `${params.category.join("/")}`,

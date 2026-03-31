@@ -1,12 +1,13 @@
 "use client"
 
 import { RadioGroup } from "@headlessui/react"
-import { paymentInfoMap } from "@lib/constants"
+import { isMercadoPago, paymentInfoMap } from "@lib/constants"
 import { initiatePaymentSession } from "@lib/data/cart"
 import { ui, UILanguage } from "@lib/i18n/ui"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
 import { Button, Container, Heading, Text, clx } from "@medusajs/ui"
 import ErrorMessage from "@modules/checkout/components/error-message"
+import MercadoPagoForm from "@modules/checkout/components/mercadopago-form"
 import PaymentContainer from "@modules/checkout/components/payment-container"
 import Divider from "@modules/common/components/divider"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
@@ -30,6 +31,9 @@ const Payment = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
     activeSession?.provider_id ?? ""
   )
+  const [mercadoPagoReady, setMercadoPagoReady] = useState(
+    Boolean(activeSession?.data?.token || activeSession?.data?.id)
+  )
 
   const t = ui(uiLanguage)
 
@@ -52,6 +56,10 @@ const Payment = ({
 
   const paymentReady =
     (activeSession && cart?.shipping_methods.length !== 0) || paidByGiftcard
+  const selectedMethodRequiresSetup = isMercadoPago(selectedPaymentMethod)
+  const selectedMethodReady = selectedMethodRequiresSetup
+    ? mercadoPagoReady
+    : Boolean(selectedPaymentMethod || paidByGiftcard)
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -72,6 +80,14 @@ const Payment = ({
   const handleSubmit = async () => {
     setIsLoading(true)
     try {
+      if (selectedMethodRequiresSetup && !mercadoPagoReady) {
+        throw new Error(
+          uiLanguage === "es"
+            ? "Completa y guarda los datos de Mercado Pago antes de continuar."
+            : "Complete and save Mercado Pago details before continuing."
+        )
+      }
+
       const checkActiveSession =
         activeSession?.provider_id === selectedPaymentMethod
 
@@ -97,6 +113,23 @@ const Payment = ({
   useEffect(() => {
     setError(null)
   }, [isOpen])
+
+  useEffect(() => {
+    setMercadoPagoReady(Boolean(activeSession?.data?.token || activeSession?.data?.id))
+  }, [activeSession?.data?.id, activeSession?.data?.token])
+
+  const handleMercadoPagoSave = useCallback(
+    async (data: Record<string, unknown>) => {
+      await initiatePaymentSession(cart, {
+        provider_id: selectedPaymentMethod,
+        data,
+      })
+
+      setMercadoPagoReady(true)
+      router.refresh()
+    },
+    [cart, router, selectedPaymentMethod]
+  )
 
   return (
     <div className="bg-white">
@@ -140,7 +173,19 @@ const Payment = ({
                       paymentInfoMap={paymentInfoMap}
                       paymentProviderId={paymentMethod.id}
                       selectedPaymentOptionId={selectedPaymentMethod}
-                    />
+                    >
+                      {selectedPaymentMethod === paymentMethod.id &&
+                        isMercadoPago(paymentMethod.id) && (
+                          <MercadoPagoForm
+                            amount={Number(cart?.total || 0)}
+                            currencyCode={String(cart?.currency_code || "usd")}
+                            email={cart?.email}
+                            uiLanguage={uiLanguage}
+                            initialReady={mercadoPagoReady}
+                            onSave={handleMercadoPagoSave}
+                          />
+                        )}
+                    </PaymentContainer>
                   </div>
                 ))}
               </RadioGroup>
@@ -171,7 +216,7 @@ const Payment = ({
             className="mt-6"
             onClick={handleSubmit}
             isLoading={isLoading}
-            disabled={!selectedPaymentMethod && !paidByGiftcard}
+            disabled={!selectedMethodReady}
             data-testid="submit-payment-button"
           >
             {t.continueToReview}
@@ -206,7 +251,13 @@ const Payment = ({
                       <CreditCard />
                     )}
                   </Container>
-                  <Text>{t.anotherStep}</Text>
+                  <Text>
+                    {isMercadoPago(selectedPaymentMethod) && mercadoPagoReady
+                      ? uiLanguage === "es"
+                        ? "Tarjeta guardada"
+                        : "Card saved"
+                      : t.anotherStep}
+                  </Text>
                 </div>
               </div>
             </div>

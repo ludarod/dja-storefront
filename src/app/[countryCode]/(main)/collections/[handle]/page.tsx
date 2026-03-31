@@ -2,6 +2,8 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getCollectionByHandle, listCollections } from "@lib/data/collections"
+import { getLocale } from "@lib/data/locale-actions"
+import { resolveUILanguage, ui } from "@lib/i18n/ui"
 import { listRegions } from "@lib/data/regions"
 import { StoreCollection, StoreRegion } from "@medusajs/types"
 import CollectionTemplate from "@modules/collections/templates"
@@ -53,14 +55,17 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params
   const collection = await getCollectionByHandle(params.handle)
+  const currentLocale = await getLocale()
+  const language = resolveUILanguage(currentLocale)
+  const t = ui(language)
 
   if (!collection) {
     notFound()
   }
 
   const metadata = {
-    title: `${collection.title} | Medusa Store`,
-    description: `${collection.title} collection`,
+    title: `${collection.title} | ${t.metaStoreName}`,
+    description: `${collection.title} ${t.collectionSuffix}`,
   } as Metadata
 
   return metadata

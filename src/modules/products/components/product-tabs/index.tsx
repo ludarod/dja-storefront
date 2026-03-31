@@ -14,11 +14,11 @@ type ProductTabsProps = {
 const ProductTabs = ({ product }: ProductTabsProps) => {
   const tabs = [
     {
-      label: "Product Information",
+      label: "Información del Producto",
       component: <ProductInfoTab product={product} />,
     },
     {
-      label: "Shipping & Returns",
+      label: "Envío y Devoluciones",
       component: <ShippingInfoTab />,
     },
   ]
@@ -47,26 +47,26 @@ const ProductInfoTab = ({ product }: ProductTabsProps) => {
       <div className="grid grid-cols-2 gap-x-8">
         <div className="flex flex-col gap-y-4">
           <div>
-            <span className="font-semibold">Material</span>
-            <p>{product.material ? product.material : "-"}</p>
+            <span className="font-semibold text-dja-blue">Material</span>
+            <p className="text-dja-graphite">{product.material ? product.material : "-"}</p>
           </div>
           <div>
-            <span className="font-semibold">Country of origin</span>
-            <p>{product.origin_country ? product.origin_country : "-"}</p>
+            <span className="font-semibold text-dja-blue">País de origen</span>
+            <p className="text-dja-graphite">{product.origin_country ? product.origin_country : "-"}</p>
           </div>
           <div>
-            <span className="font-semibold">Type</span>
-            <p>{product.type ? product.type.value : "-"}</p>
+            <span className="font-semibold text-dja-blue">Tipo</span>
+            <p className="text-dja-graphite">{product.type ? product.type.value : "-"}</p>
           </div>
         </div>
         <div className="flex flex-col gap-y-4">
           <div>
-            <span className="font-semibold">Weight</span>
-            <p>{product.weight ? `${product.weight} g` : "-"}</p>
+            <span className="font-semibold text-dja-blue">Peso</span>
+            <p className="text-dja-graphite">{product.weight ? `${product.weight} g` : "-"}</p>
           </div>
           <div>
-            <span className="font-semibold">Dimensions</span>
-            <p>
+            <span className="font-semibold text-dja-blue">Dimensiones</span>
+            <p className="text-dja-graphite">
               {product.length && product.width && product.height
                 ? `${product.length}L x ${product.width}W x ${product.height}H`
                 : "-"}
@@ -85,31 +85,27 @@ const ShippingInfoTab = () => {
         <div className="flex items-start gap-x-2">
           <FastDelivery />
           <div>
-            <span className="font-semibold">Fast delivery</span>
-            <p className="max-w-sm">
-              Your package will arrive in 3-5 business days at your pick up
-              location or in the comfort of your home.
+            <span className="font-semibold text-dja-blue">Entrega rápida</span>
+            <p className="max-w-sm text-dja-graphite">
+              Tu paquete llegará en 3 a 5 días hábiles a tu punto de recogida o a la comodidad de tu hogar.
             </p>
           </div>
         </div>
         <div className="flex items-start gap-x-2">
           <Refresh />
           <div>
-            <span className="font-semibold">Simple exchanges</span>
-            <p className="max-w-sm">
-              Is the fit not quite right? No worries - we&apos;ll exchange your
-              product for a new one.
+            <span className="font-semibold text-dja-blue">Cambios sencillos</span>
+            <p className="max-w-sm text-dja-graphite">
+              ¿No es exactamente lo que buscabas? No te preocupes, cambiaremos tu producto por uno nuevo.
             </p>
           </div>
         </div>
         <div className="flex items-start gap-x-2">
           <Back />
           <div>
-            <span className="font-semibold">Easy returns</span>
-            <p className="max-w-sm">
-              Just return your product and we&apos;ll refund your money. No
-              questions asked – we&apos;ll do our best to make sure your return
-              is hassle-free.
+            <span className="font-semibold text-dja-blue">Devoluciones fáciles</span>
+            <p className="max-w-sm text-dja-graphite">
+              Simplemente devuelve tu producto y te reembolsaremos tu dinero. Sin preguntas: haremos lo mejor para asegurar que tu devolución sea sin problemas.
             </p>
           </div>
         </div>

@@ -4,13 +4,16 @@ import EmptyCartMessage from "../components/empty-cart-message"
 import SignInPrompt from "../components/sign-in-prompt"
 import Divider from "@modules/common/components/divider"
 import { HttpTypes } from "@medusajs/types"
+import { UILanguage } from "@lib/i18n/ui"
 
 const CartTemplate = ({
   cart,
   customer,
+  uiLanguage,
 }: {
   cart: HttpTypes.StoreCart | null
   customer: HttpTypes.StoreCustomer | null
+  uiLanguage: UILanguage
 }) => {
   return (
     <div className="py-12">
@@ -20,18 +23,18 @@ const CartTemplate = ({
             <div className="flex flex-col bg-white py-6 gap-y-6">
               {!customer && (
                 <>
-                  <SignInPrompt />
+                  <SignInPrompt uiLanguage={uiLanguage} />
                   <Divider />
                 </>
               )}
-              <ItemsTemplate cart={cart} />
+              <ItemsTemplate cart={cart} uiLanguage={uiLanguage} />
             </div>
             <div className="relative">
               <div className="flex flex-col gap-y-8 sticky top-12">
                 {cart && cart.region && (
                   <>
                     <div className="bg-white py-6">
-                      <Summary cart={cart as any} />
+                      <Summary cart={cart as any} uiLanguage={uiLanguage} />
                     </div>
                   </>
                 )}
@@ -40,7 +43,7 @@ const CartTemplate = ({
           </div>
         ) : (
           <div>
-            <EmptyCartMessage />
+            <EmptyCartMessage uiLanguage={uiLanguage} />
           </div>
         )}
       </div>

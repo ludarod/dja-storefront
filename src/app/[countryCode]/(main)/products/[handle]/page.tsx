@@ -2,6 +2,8 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
+import { getLocale } from "@lib/data/locale-actions"
+import { resolveUILanguage, ui } from "@lib/i18n/ui"
 import ProductTemplate from "@modules/products/templates"
 import { HttpTypes } from "@medusajs/types"
 
@@ -61,18 +63,21 @@ function getImagesForVariant(
   }
 
   const variant = product.variants!.find((v) => v.id === selectedVariantId)
-  if (!variant || !variant.images.length) {
+  if (!variant || !variant.images?.length) {
     return product.images
   }
 
-  const imageIdsMap = new Map(variant.images.map((i) => [i.id, true]))
-  return product.images!.filter((i) => imageIdsMap.has(i.id))
+  const imageIdsMap = new Map((variant.images || []).map((i) => [i.id, true]))
+  return (product.images || []).filter((i) => imageIdsMap.has(i.id))
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params
   const { handle } = params
   const region = await getRegion(params.countryCode)
+  const currentLocale = await getLocale()
+  const language = resolveUILanguage(currentLocale)
+  const t = ui(language)
 
   if (!region) {
     notFound()
@@ -88,10 +93,10 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${product.title} | Medusa Store`,
+    title: `${product.title} | ${t.metaStoreName}`,
     description: `${product.title}`,
     openGraph: {
-      title: `${product.title} | Medusa Store`,
+      title: `${product.title} | ${t.metaStoreName}`,
       description: `${product.title}`,
       images: product.thumbnail ? [product.thumbnail] : [],
     },
@@ -114,18 +119,18 @@ export default async function ProductPage(props: Props) {
     queryParams: { handle: params.handle },
   }).then(({ response }) => response.products[0])
 
-  const images = getImagesForVariant(pricedProduct, selectedVariantId)
-
   if (!pricedProduct) {
     notFound()
   }
+
+  const images = getImagesForVariant(pricedProduct, selectedVariantId)
 
   return (
     <ProductTemplate
       product={pricedProduct}
       region={region}
       countryCode={params.countryCode}
-      images={images}
+      images={images || []}
     />
   )
 }

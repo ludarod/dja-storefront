@@ -11,14 +11,19 @@ import Package from "@modules/common/icons/package"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
 import { signout } from "@lib/data/customer"
+import { ui, UILanguage } from "@lib/i18n/ui"
+import { LayoutDashboard, LogOut, MapPinned, PackageSearch, UserRound } from "lucide-react"
 
 const AccountNav = ({
   customer,
+  uiLanguage,
 }: {
   customer: HttpTypes.StoreCustomer | null
+  uiLanguage: UILanguage
 }) => {
   const route = usePathname()
   const { countryCode } = useParams() as { countryCode: string }
+  const t = ui(uiLanguage)
 
   const handleLogout = async () => {
     await signout(countryCode)
@@ -35,13 +40,13 @@ const AccountNav = ({
           >
             <>
               <ChevronDown className="transform rotate-90" />
-              <span>Account</span>
+              <span>{t.account}</span>
             </>
           </LocalizedClientLink>
         ) : (
           <>
             <div className="text-xl-semi mb-4 px-8">
-              Hello {customer?.first_name}
+              {t.hello} {customer?.first_name}
             </div>
             <div className="text-base-regular">
               <ul>
@@ -54,7 +59,7 @@ const AccountNav = ({
                     <>
                       <div className="flex items-center gap-x-2">
                         <User size={20} />
-                        <span>Profile</span>
+                        <span>{t.profile}</span>
                       </div>
                       <ChevronDown className="transform -rotate-90" />
                     </>
@@ -69,7 +74,7 @@ const AccountNav = ({
                     <>
                       <div className="flex items-center gap-x-2">
                         <MapPin size={20} />
-                        <span>Addresses</span>
+                        <span>{t.addresses}</span>
                       </div>
                       <ChevronDown className="transform -rotate-90" />
                     </>
@@ -83,7 +88,7 @@ const AccountNav = ({
                   >
                     <div className="flex items-center gap-x-2">
                       <Package size={20} />
-                      <span>Orders</span>
+                      <span>{t.orders}</span>
                     </div>
                     <ChevronDown className="transform -rotate-90" />
                   </LocalizedClientLink>
@@ -97,7 +102,7 @@ const AccountNav = ({
                   >
                     <div className="flex items-center gap-x-2">
                       <ArrowRightOnRectangle />
-                      <span>Log out</span>
+                      <span>{t.logout}</span>
                     </div>
                     <ChevronDown className="transform -rotate-90" />
                   </button>
@@ -108,55 +113,61 @@ const AccountNav = ({
         )}
       </div>
       <div className="hidden small:block" data-testid="account-nav">
-        <div>
-          <div className="pb-4">
-            <h3 className="text-base-semi">Account</h3>
+        <div className="rounded-xl border border-ui-border-base bg-white p-5">
+          <div className="pb-4 border-b border-ui-border-base mb-4">
+            <h3 className="text-base-semi uppercase tracking-wider text-ui-fg-subtle">{t.account}</h3>
           </div>
           <div className="text-base-regular">
-            <ul className="flex mb-0 justify-start items-start flex-col gap-y-4">
-              <li>
+            <ul className="flex mb-0 justify-start items-start flex-col gap-y-2">
+              <li className="w-full">
                 <AccountNavLink
                   href="/account"
                   route={route!}
+                  icon={<LayoutDashboard size={16} className="text-gold" />}
                   data-testid="overview-link"
                 >
-                  Overview
+                  {t.overview}
                 </AccountNavLink>
               </li>
-              <li>
+              <li className="w-full">
                 <AccountNavLink
                   href="/account/profile"
                   route={route!}
+                  icon={<UserRound size={16} className="text-gold" />}
                   data-testid="profile-link"
                 >
-                  Profile
+                  {t.profile}
                 </AccountNavLink>
               </li>
-              <li>
+              <li className="w-full">
                 <AccountNavLink
                   href="/account/addresses"
                   route={route!}
+                  icon={<MapPinned size={16} className="text-gold" />}
                   data-testid="addresses-link"
                 >
-                  Addresses
+                  {t.addresses}
                 </AccountNavLink>
               </li>
-              <li>
+              <li className="w-full">
                 <AccountNavLink
                   href="/account/orders"
                   route={route!}
+                  icon={<PackageSearch size={16} className="text-gold" />}
                   data-testid="orders-link"
                 >
-                  Orders
+                  {t.orders}
                 </AccountNavLink>
               </li>
-              <li className="text-grey-700">
+              <li className="w-full pt-2 mt-2 border-t border-ui-border-base">
                 <button
                   type="button"
                   onClick={handleLogout}
+                  className="w-full inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-200 hover:border-red-200 hover:bg-red-50 transition-colors text-red-600"
                   data-testid="logout-button"
                 >
-                  Log out
+                  <LogOut size={16} />
+                  {t.logout}
                 </button>
               </li>
             </ul>
@@ -171,6 +182,7 @@ type AccountNavLinkProps = {
   href: string
   route: string
   children: React.ReactNode
+  icon?: React.ReactNode
   "data-testid"?: string
 }
 
@@ -178,6 +190,7 @@ const AccountNavLink = ({
   href,
   route,
   children,
+  icon,
   "data-testid": dataTestId,
 }: AccountNavLinkProps) => {
   const { countryCode }: { countryCode: string } = useParams()
@@ -186,11 +199,16 @@ const AccountNavLink = ({
   return (
     <LocalizedClientLink
       href={href}
-      className={clx("text-ui-fg-subtle hover:text-ui-fg-base", {
-        "text-ui-fg-base font-semibold": active,
-      })}
+      className={clx(
+        "w-full inline-flex items-center gap-2 px-3 py-2 rounded-md transition-colors",
+        {
+          "text-ui-fg-subtle hover:text-ui-fg-base hover:bg-gray-50": !active,
+          "text-ui-fg-base font-semibold bg-gray-50": active,
+        }
+      )}
       data-testid={dataTestId}
     >
+      {icon}
       {children}
     </LocalizedClientLink>
   )

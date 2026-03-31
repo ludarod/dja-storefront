@@ -120,19 +120,25 @@ export default function ProductActions({
 
   const inView = useIntersection(actionsRef, "0px")
 
+  const hasPrice = useMemo(() => {
+    const calculatedPrice = (selectedVariant as any)?.calculated_price
+    return calculatedPrice?.calculated_amount != null
+  }, [selectedVariant])
+
   // add the selected variant to the cart
   const handleAddToCart = async () => {
     if (!selectedVariant?.id) return null
 
     setIsAdding(true)
-
-    await addToCart({
-      variantId: selectedVariant.id,
-      quantity: 1,
-      countryCode,
-    })
-
-    setIsAdding(false)
+    try {
+      await addToCart({
+        variantId: selectedVariant.id,
+        quantity: 1,
+        countryCode,
+      })
+    } finally {
+      setIsAdding(false)
+    }
   }
 
   return (
@@ -166,21 +172,23 @@ export default function ProductActions({
           onClick={handleAddToCart}
           disabled={
             !inStock ||
+            !hasPrice ||
             !selectedVariant ||
             !!disabled ||
             isAdding ||
             !isValidVariant
           }
-          variant="primary"
-          className="w-full h-10"
+          className="luxury-btn h-12"
           isLoading={isAdding}
           data-testid="add-product-button"
         >
-          {!selectedVariant && !options
-            ? "Select variant"
+          {!selectedVariant
+            ? "Seleccionar variante"
+            : !hasPrice
+            ? "Sin precio disponible"
             : !inStock || !isValidVariant
-            ? "Out of stock"
-            : "Add to cart"}
+            ? "Agotado"
+            : "Añadir al carrito"}
         </Button>
         <MobileActions
           product={product}
@@ -188,6 +196,7 @@ export default function ProductActions({
           options={options}
           updateOptions={setOptionValue}
           inStock={inStock}
+          hasPrice={hasPrice}
           handleAddToCart={handleAddToCart}
           isAdding={isAdding}
           show={!inView}

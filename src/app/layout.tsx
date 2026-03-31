@@ -4,6 +4,11 @@ import "styles/globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
+  icons: {
+    icon: "/branding/store-icon-gold.svg",
+    shortcut: "/branding/store-icon-gold.svg",
+    apple: "/branding/store-icon-gold.svg",
+  },
 }
 
 export default function RootLayout(props: { children: React.ReactNode }) {

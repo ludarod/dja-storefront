@@ -16,16 +16,22 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import Thumbnail from "@modules/products/components/thumbnail"
 import { usePathname } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
+import { ui, UILanguage } from "@lib/i18n/ui"
+import { ShoppingCart } from "lucide-react"
 
 const CartDropdown = ({
   cart: cartState,
+  uiLanguage,
 }: {
   cart?: HttpTypes.StoreCart | null
+  uiLanguage: UILanguage
 }) => {
   const [activeTimer, setActiveTimer] = useState<NodeJS.Timer | undefined>(
     undefined
   )
   const [cartDropdownOpen, setCartDropdownOpen] = useState(false)
+
+  const t = ui(uiLanguage)
 
   const open = () => setCartDropdownOpen(true)
   const close = () => setCartDropdownOpen(false)
@@ -54,7 +60,6 @@ const CartDropdown = ({
     open()
   }
 
-  // Clean up the timer when the component unmounts
   useEffect(() => {
     return () => {
       if (activeTimer) {
@@ -65,7 +70,6 @@ const CartDropdown = ({
 
   const pathname = usePathname()
 
-  // open cart dropdown when modifying the cart items, but only if we're not on the cart page
   useEffect(() => {
     if (itemRef.current !== totalItems && !pathname.includes("/cart")) {
       timedOpen()
@@ -82,10 +86,13 @@ const CartDropdown = ({
       <Popover className="relative h-full">
         <PopoverButton className="h-full">
           <LocalizedClientLink
-            className="hover:text-ui-fg-base"
+            className="hover:text-gold inline-flex items-center gap-2 uppercase tracking-wider text-small-regular font-semibold"
             href="/cart"
             data-testid="nav-cart-link"
-          >{`Cart (${totalItems})`}</LocalizedClientLink>
+          >
+            <ShoppingCart size={16} className="text-gold" />
+            {`${t.cart} (${totalItems})`}
+          </LocalizedClientLink>
         </PopoverButton>
         <Transition
           show={cartDropdownOpen}
@@ -99,11 +106,11 @@ const CartDropdown = ({
         >
           <PopoverPanel
             static
-            className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base"
+            className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base shadow-xl"
             data-testid="nav-cart-dropdown"
           >
             <div className="p-4 flex items-center justify-center">
-              <h3 className="text-large-semi">Cart</h3>
+              <h3 className="text-large-semi font-bold text-luxury-black">{t.cart}</h3>
             </div>
             {cartState && cartState.items?.length ? (
               <>
@@ -150,11 +157,12 @@ const CartDropdown = ({
                                 <span
                                   data-testid="cart-item-quantity"
                                   data-value={item.quantity}
+                                  className="text-ui-fg-subtle text-xs"
                                 >
-                                  Quantity: {item.quantity}
+                                  {t.quantity}: {item.quantity}
                                 </span>
                               </div>
-                              <div className="flex justify-end">
+                              <div className="flex justify-end font-bold">
                                 <LineItemPrice
                                   item={item}
                                   style="tight"
@@ -165,23 +173,22 @@ const CartDropdown = ({
                           </div>
                           <DeleteButton
                             id={item.id}
-                            className="mt-1"
+                            className="mt-1 text-xs text-red-500 hover:text-red-700"
                             data-testid="cart-item-remove-button"
                           >
-                            Remove
+                            {t.remove}
                           </DeleteButton>
                         </div>
                       </div>
                     ))}
                 </div>
-                <div className="p-4 flex flex-col gap-y-4 text-small-regular">
+                <div className="p-4 flex flex-col gap-y-4 text-small-regular border-t border-ui-border-base mt-4">
                   <div className="flex items-center justify-between">
                     <span className="text-ui-fg-base font-semibold">
-                      Subtotal{" "}
-                      <span className="font-normal">(excl. taxes)</span>
+                      {t.subtotalExclTaxes}
                     </span>
                     <span
-                      className="text-large-semi"
+                      className="text-large-semi font-bold text-luxury-black"
                       data-testid="cart-subtotal"
                       data-value={subtotal}
                     >
@@ -193,11 +200,11 @@ const CartDropdown = ({
                   </div>
                   <LocalizedClientLink href="/cart" passHref>
                     <Button
-                      className="w-full"
+                      className="w-full !bg-luxury-black !text-luxury-white hover:!bg-gold hover:!text-luxury-black rounded-none"
                       size="large"
                       data-testid="go-to-cart-button"
                     >
-                      Go to cart
+                      {t.viewCart}
                     </Button>
                   </LocalizedClientLink>
                 </div>
@@ -205,15 +212,15 @@ const CartDropdown = ({
             ) : (
               <div>
                 <div className="flex py-16 flex-col gap-y-4 items-center justify-center">
-                  <div className="bg-gray-900 text-small-regular flex items-center justify-center w-6 h-6 rounded-full text-white">
+                  <div className="bg-luxury-black text-small-regular flex items-center justify-center w-6 h-6 rounded-full text-white">
                     <span>0</span>
                   </div>
-                  <span>Your shopping bag is empty.</span>
+                  <span className="text-ui-fg-subtle font-medium">{t.emptyCart}</span>
                   <div>
                     <LocalizedClientLink href="/store">
                       <>
-                        <span className="sr-only">Go to all products page</span>
-                        <Button onClick={close}>Explore products</Button>
+                        <span className="sr-only">Browse products page</span>
+                        <Button onClick={close} className="rounded-none border-luxury-black text-luxury-black hover:bg-gold/10" variant="secondary">{t.browseProducts}</Button>
                       </>
                     </LocalizedClientLink>
                   </div>

@@ -15,8 +15,8 @@ const LineItemPrice = ({
   currencyCode,
 }: LineItemPriceProps) => {
   const { total, original_total } = item
-  const originalPrice = original_total
-  const currentPrice = total
+  const originalPrice = original_total ?? total ?? 0
+  const currentPrice = total ?? 0
   const hasReducedPrice = currentPrice < originalPrice
 
   return (
@@ -33,7 +33,7 @@ const LineItemPrice = ({
                 data-testid="product-original-price"
               >
                 {convertToLocale({
-                  amount: originalPrice,
+                  amount: originalPrice ?? 0,
                   currency_code: currencyCode,
                 })}
               </span>
@@ -52,7 +52,7 @@ const LineItemPrice = ({
           data-testid="product-price"
         >
           {convertToLocale({
-            amount: currentPrice,
+            amount: currentPrice ?? 0,
             currency_code: currencyCode,
           })}
         </span>

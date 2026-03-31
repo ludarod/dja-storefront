@@ -1,155 +1,102 @@
-import { listCategories } from "@lib/data/categories"
-import { listCollections } from "@lib/data/collections"
-import { Text, clx } from "@medusajs/ui"
+import { getLocale } from "@lib/data/locale-actions"
+import { resolveUILanguage, ui } from "@lib/i18n/ui"
+import { Text } from "@medusajs/ui"
 
+import BrandLogo from "@modules/common/components/brand-logo"
+import ContactForm from "@modules/layout/components/contact-form"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import MedusaCTA from "@modules/layout/components/medusa-cta"
+import { Facebook, Instagram, MessageCircle } from "lucide-react"
 
 export default async function Footer() {
-  const { collections } = await listCollections({
-    fields: "*products",
-  })
-  const productCategories = await listCategories()
+  const currentLocale = await getLocale()
+
+  const language = resolveUILanguage(currentLocale)
+  const t = ui(language)
 
   return (
-    <footer className="border-t border-ui-border-base w-full">
-      <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
-          <div>
+    <footer className="bg-luxury-black border-t border-ui-border-base w-full mt-20 text-luxury-white">
+      <div className="content-container flex flex-col w-full py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-10">
+          <div className="flex flex-col gap-y-6">
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
+              className="inline-flex"
             >
-              Medusa Store
+              <BrandLogo size="md" />
             </LocalizedClientLink>
-          </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
-            {productCategories && productCategories?.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Categories
-                </span>
-                <ul
-                  className="grid grid-cols-1 gap-2"
-                  data-testid="footer-categories"
-                >
-                  {productCategories?.slice(0, 6).map((c) => {
-                    if (c.parent_category) {
-                      return
-                    }
-
-                    const children =
-                      c.category_children?.map((child) => ({
-                        name: child.name,
-                        handle: child.handle,
-                        id: child.id,
-                      })) || null
-
-                    return (
-                      <li
-                        className="flex flex-col gap-2 text-ui-fg-subtle txt-small"
-                        key={c.id}
-                      >
-                        <LocalizedClientLink
-                          className={clx(
-                            "hover:text-ui-fg-base",
-                            children && "txt-small-plus"
-                          )}
-                          href={`/categories/${c.handle}`}
-                          data-testid="category-link"
-                        >
-                          {c.name}
-                        </LocalizedClientLink>
-                        {children && (
-                          <ul className="grid grid-cols-1 ml-3 gap-2">
-                            {children &&
-                              children.map((child) => (
-                                <li key={child.id}>
-                                  <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
-                                    href={`/categories/${child.handle}`}
-                                    data-testid="category-link"
-                                  >
-                                    {child.name}
-                                  </LocalizedClientLink>
-                                </li>
-                              ))}
-                          </ul>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Collections
-                </span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
-                <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    GitHub
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Source code
-                  </a>
-                </li>
-              </ul>
+            <Text className="text-white/60 leading-relaxed font-medium">
+              {t.brandDescription}
+            </Text>
+            <div className="flex flex-col gap-1 text-xs text-white/40">
+               <span>saborcubanoexpress.com</span>
+               <span>@saborcubano</span>
+            </div>
+            <div className="flex flex-col gap-y-2 text-xs text-white/60 font-medium">
+              <span className="font-bold text-gold uppercase tracking-widest text-[0.55rem]">
+                {t.support}
+              </span>
+              <LocalizedClientLink href="/account" className="hover:text-gold transition-colors">
+                {t.account}
+              </LocalizedClientLink>
+              <a href="https://wa.me/5358222742" className="hover:text-gold transition-colors">
+                {t.whatsappSupport}
+              </a>
             </div>
           </div>
+
+          <div className="flex flex-col gap-y-4">
+            <span className="font-bold text-gold uppercase tracking-widest text-xs">{t.social}</span>
+            <ul className="flex flex-col gap-y-3 text-white/60 font-medium">
+              <li>
+                <a
+                  href="https://www.instagram.com/sabor_cubano_express?igsh=bXZ2bm5la2J5bm55&utm_source=qr"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 hover:text-gold transition-colors"
+                >
+                  <Instagram size={16} />
+                  {t.instagram}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.facebook.com/saborcubanoexpress"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 hover:text-gold transition-colors"
+                >
+                  <Facebook size={16} />
+                  {t.facebook}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://wa.me/5358222742"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 hover:text-gold transition-colors"
+                >
+                  <MessageCircle size={16} />
+                  {t.whatsapp}
+                </a>
+              </li>
+            </ul>
+            <p className="text-[0.65rem] uppercase tracking-[3px] text-white/40">{t.followUs}</p>
+          </div>
+
+          <ContactForm
+            heading={t.contactHeading}
+            description={t.contactDescription}
+            nameLabel={t.contactName}
+            emailLabel={t.contactEmail}
+            messageLabel={t.contactMessage}
+            submitLabel={t.sendMessage}
+            successMessage={t.contactSubmitted}
+          />
         </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
-          <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Medusa Store. All rights reserved.
-          </Text>
-          <MedusaCTA />
+
+        <div className="pt-6 text-center text-xs uppercase tracking-[2px] text-white/60">
+          © {new Date().getFullYear()} SABOR CUBANO EXPRESS - BAYAMO, GRANMA.
         </div>
       </div>
     </footer>

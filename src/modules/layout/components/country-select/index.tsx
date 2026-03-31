@@ -27,10 +27,7 @@ type CountrySelectProps = {
 }
 
 const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
-  const [current, setCurrent] = useState<
-    | { country: string | undefined; region: string; label: string | undefined }
-    | undefined
-  >(undefined)
+  const [current, setCurrent] = useState<CountryOption | undefined>(undefined)
 
   const { countryCode } = useParams()
   const currentPath = usePathname().split(`/${countryCode}`)[1]
@@ -39,20 +36,23 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
 
   const options = useMemo(() => {
     return regions
-      ?.map((r) => {
-        return r.countries?.map((c) => ({
-          country: c.iso_2,
-          region: r.id,
-          label: c.display_name,
-        }))
-      })
-      .flat()
-      .sort((a, b) => (a?.label ?? "").localeCompare(b?.label ?? ""))
+      .flatMap((r) =>
+        (r.countries ?? [])
+          .filter((c): c is typeof c & { iso_2: string; display_name: string } =>
+            Boolean(c.iso_2 && c.display_name)
+          )
+          .map((c) => ({
+            country: c.iso_2,
+            region: r.id,
+            label: c.display_name,
+          }))
+      )
+      .sort((a, b) => a.label.localeCompare(b.label))
   }, [regions])
 
   useEffect(() => {
     if (countryCode) {
-      const option = options?.find((o) => o?.country === countryCode)
+      const option = options.find((o) => o.country === countryCode)
       setCurrent(option)
     }
   }, [options, countryCode])
@@ -69,7 +69,7 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
         onChange={handleChange}
         defaultValue={
           countryCode
-            ? options?.find((o) => o?.country === countryCode)
+            ? options.find((o) => o.country === countryCode)
             : undefined
         }
       >
@@ -120,7 +120,7 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
                       }}
                       countryCode={o?.country ?? ""}
                     />{" "}
-                    {o?.label}
+                    {o.label}
                   </ListboxOption>
                 )
               })}

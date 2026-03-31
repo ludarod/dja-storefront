@@ -4,6 +4,7 @@ import { Badge, Heading, Input, Label, Text } from "@medusajs/ui"
 import React from "react"
 
 import { applyPromotions } from "@lib/data/cart"
+import { validateCouponCode } from "@lib/data/custom"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 import Trash from "@modules/common/icons/trash"
@@ -42,7 +43,19 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
     const codes = promotions
       .filter((p) => p.code !== undefined)
       .map((p) => p.code!)
-    codes.push(code.toString())
+    const couponCode = code.toString()
+
+    const validation = await validateCouponCode({
+      code: couponCode,
+      cartId: cart.id,
+    })
+
+    if (!validation.valid) {
+      setErrorMessage(validation.message || "Cupon invalido")
+      return
+    }
+
+    codes.push(couponCode)
 
     try {
       await applyPromotions(codes)

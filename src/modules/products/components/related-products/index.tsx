@@ -1,5 +1,7 @@
+import { getLocale } from "@lib/data/locale-actions"
 import { listProducts } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
+import { resolveUILanguage, ui } from "@lib/i18n/ui"
 import { HttpTypes } from "@medusajs/types"
 import Product from "../product-preview"
 
@@ -12,11 +14,16 @@ export default async function RelatedProducts({
   product,
   countryCode,
 }: RelatedProductsProps) {
-  const region = await getRegion(countryCode)
+  const [region, currentLocale] = await Promise.all([
+    getRegion(countryCode),
+    getLocale(),
+  ])
 
   if (!region) {
     return null
   }
+  const language = resolveUILanguage(currentLocale)
+  const t = ui(language)
 
   // edit this function to define your related products logic
   const queryParams: HttpTypes.StoreProductListParams = {}
@@ -48,13 +55,10 @@ export default async function RelatedProducts({
 
   return (
     <div className="product-page-constraint">
-      <div className="flex flex-col items-center text-center mb-16">
-        <span className="text-base-regular text-gray-600 mb-6">
-          Related products
+      <div className="mb-6">
+        <span className="text-sm font-semibold uppercase tracking-wider text-gray-600">
+          {t.relatedProductsTitle}
         </span>
-        <p className="text-2xl-regular text-ui-fg-base max-w-lg">
-          You might also want to check out these products.
-        </p>
       </div>
 
       <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8">

@@ -7,11 +7,13 @@ import Divider from "@modules/common/components/divider"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
+import { ui, UILanguage } from "@lib/i18n/ui"
 
 type SummaryProps = {
   cart: HttpTypes.StoreCart & {
     promotions: HttpTypes.StorePromotion[]
   }
+  uiLanguage: UILanguage
 }
 
 function getCheckoutStep(cart: HttpTypes.StoreCart) {
@@ -24,22 +26,23 @@ function getCheckoutStep(cart: HttpTypes.StoreCart) {
   }
 }
 
-const Summary = ({ cart }: SummaryProps) => {
+const Summary = ({ cart, uiLanguage }: SummaryProps) => {
   const step = getCheckoutStep(cart)
+  const t = ui(uiLanguage)
 
   return (
     <div className="flex flex-col gap-y-4">
       <Heading level="h2" className="text-[2rem] leading-[2.75rem]">
-        Summary
+        {t.summary}
       </Heading>
       <DiscountCode cart={cart} />
       <Divider />
-      <CartTotals totals={cart} />
+      <CartTotals totals={cart} uiLanguage={uiLanguage} />
       <LocalizedClientLink
         href={"/checkout?step=" + step}
         data-testid="checkout-button"
       >
-        <Button className="w-full h-10">Go to checkout</Button>
+        <Button className="w-full h-10">{t.goToCheckout}</Button>
       </LocalizedClientLink>
     </div>
   )

@@ -14,10 +14,15 @@ const LineItemUnitPrice = ({
   currencyCode,
 }: LineItemUnitPriceProps) => {
   const { total, original_total } = item
-  const hasReducedPrice = total < original_total
+  const safeTotal = total ?? 0
+  const safeOriginalTotal = original_total ?? safeTotal
+  const safeQuantity = item.quantity || 1
+  const hasReducedPrice = safeTotal < safeOriginalTotal
 
   const percentage_diff = Math.round(
-    ((original_total - total) / original_total) * 100
+    safeOriginalTotal > 0
+      ? ((safeOriginalTotal - safeTotal) / safeOriginalTotal) * 100
+      : 0
   )
 
   return (
@@ -33,7 +38,7 @@ const LineItemUnitPrice = ({
               data-testid="product-unit-original-price"
             >
               {convertToLocale({
-                amount: original_total / item.quantity,
+                amount: safeOriginalTotal / safeQuantity,
                 currency_code: currencyCode,
               })}
             </span>
@@ -50,7 +55,7 @@ const LineItemUnitPrice = ({
         data-testid="product-unit-price"
       >
         {convertToLocale({
-          amount: total / item.quantity,
+          amount: safeTotal / safeQuantity,
           currency_code: currencyCode,
         })}
       </span>

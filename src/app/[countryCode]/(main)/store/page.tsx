@@ -4,14 +4,15 @@ import { SortOptions } from "@modules/store/components/refinement-list/sort-prod
 import StoreTemplate from "@modules/store/templates"
 
 export const metadata: Metadata = {
-  title: "Store",
-  description: "Explore all of our products.",
+  title: "Sabor Cubano Express",
+  description: "Explora todo el catálogo de Sabor Cubano Express con envíos a EE.UU., Europa y el Caribe.",
 }
 
 type Params = {
   searchParams: Promise<{
     sortBy?: SortOptions
     page?: string
+    q?: string
   }>
   params: Promise<{
     countryCode: string
@@ -21,12 +22,13 @@ type Params = {
 export default async function StorePage(props: Params) {
   const params = await props.params;
   const searchParams = await props.searchParams;
-  const { sortBy, page } = searchParams
+  const { sortBy, page, q } = searchParams
 
   return (
     <StoreTemplate
       sortBy={sortBy}
       page={page}
+      q={q}
       countryCode={params.countryCode}
     />
   )
