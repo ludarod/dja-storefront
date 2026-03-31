@@ -20,6 +20,7 @@ export const listCartShippingMethods = async (cartId: string) => {
         method: "GET",
         query: {
           cart_id: cartId,
+          fields: "*service_zone,*service_zone.fulfillment_set",
         },
         headers,
         next,
