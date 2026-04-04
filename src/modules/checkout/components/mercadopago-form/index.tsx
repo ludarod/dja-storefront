@@ -221,25 +221,15 @@ const MercadoPagoForm = ({
       {/* Header con Logo */}
       <div className="flex items-center justify-between border-b border-ui-border-base bg-ui-bg-subtle px-5 py-4">
         <div className="flex items-center gap-x-3">
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            className="h-7 w-auto" 
-            viewBox="0 0 140 34"
-            fill="none"
-          >
-            <path fill="#009EE3" d="M18.4 0C8.2 0 0 8.2 0 18.4c0 10.2 8.2 18.4 18.4 18.4 10.2 0 18.4-8.2 18.4-18.4C36.8 8.2 28.6 0 18.4 0zm0 33.4c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15z"/>
-            <path fill="#009EE3" d="M24.2 12.1c-1.1-1.1-2.6-1.7-4.2-1.7-1.6 0-3.1.6-4.2 1.7l-6.4 6.4c-.4.4-.4 1 0 1.4.4.4 1 .4 1.4 0l6.4-6.4c.7-.7 1.7-1.1 2.8-1.1 1.1 0 2.1.4 2.8 1.1.8.8.8 2 0 2.8l-6.4 6.4c-.4.4-.4 1 0 1.4.2.2.5.3.7.3s.5-.1.7-.3l6.4-6.4c1.6-1.5 1.6-4.1.1-5.6z"/>
-            <path fill="#009EE3" d="M12.6 24.7c1.1 1.1 2.6 1.7 4.2 1.7 1.6 0 3.1-.6 4.2-1.7l6.4-6.4c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0l-6.4 6.4c-.7.7-1.7 1.1-2.8 1.1-1.1 0-2.1-.4-2.8-1.1-.8-.8-.8-2 0-2.8l6.4-6.4c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0l-6.4 6.4c-1.5 1.5-1.5 4.1-.1 5.6z"/>
-            <g fill="#2D3277">
-              <path d="M49.4 11.4h2.8v14.4h-2.8V15.2l-4.4 10.6h-1.8l-4.4-10.6v10.6h-2.8V11.4h3.8l4.3 10.4 4.3-10.4h3.8zM59.8 21.4c0 1.4.5 2.4 1.6 2.4.8 0 1.4-.4 1.8-1.1l2.2 1.2c-.8 1.4-2.2 2.3-4.1 2.3-3 0-4.5-2.2-4.5-4.8 0-2.7 1.6-4.8 4.4-4.8 2.8 0 4.2 2.1 4.2 4.4v.4h-5.6zm2.8-1.9c-.1-1.1-.6-1.8-1.5-1.8-.9 0-1.3.7-1.3 1.8h2.8zM68.4 16.8h2.6v1.6c.5-1.1 1.5-1.8 2.8-1.8.3 0 .5 0 .7.1v2.7c-.3-.1-.6-.1-.9-.1-1.6 0-2.6 1.1-2.6 2.9v4.6h-2.6v-9zM81.8 23.8c-1.1 0-1.8-.8-1.8-2.4 0-1.5.7-2.4 1.8-2.4.8 0 1.4.4 1.7 1.1l2.2-1.2c-.7-1.5-2.1-2.3-4-2.3-2.9 0-4.5 2.2-4.5 4.8 0 2.7 1.6 4.8 4.5 4.8 1.9 0 3.3-.8 4-2.3l-2.2-1.2c-.3.7-.9 1.1-1.7 1.1zM93.4 21.1c0 1.1-.7 1.7-1.8 1.7-1.1 0-1.8-.6-1.8-1.7 0-1.1.7-1.7 1.8-1.7 1.1 0 1.8.6 1.8 1.7zm2.7 0c0-2.6-1.8-4.5-4.5-4.5s-4.5 1.9-4.5 4.5 1.8 4.5 4.5 4.5 4.5-1.9 4.5-4.5zm-4.5 7.1c-1.1 0-2.1-.3-2.9-.8l-.8 2.2c1.1.6 2.4.9 3.7.9 3.8 0 6.1-2.2 6.1-5.6v-8.1h-2.6v1.4c-.6-.9-1.7-1.6-3.1-1.6-2.9 0-4.8 2.2-4.8 4.8s1.9 4.8 4.8 4.8c1.4 0 2.5-.7 3.1-1.6v.1c0 2.2-1.4 3.5-3.5 3.5zM106.4 21.1c0 1.1-.7 1.7-1.8 1.7-1.1 0-1.8-.6-1.8-1.7 0-1.1.7-1.7 1.8-1.7 1.1 0 1.8.6 1.8 1.7zm2.7 0c0-2.6-1.8-4.5-4.5-4.5s-4.5 1.9-4.5 4.5 1.8 4.5 4.5 4.5 4.5-1.9 4.5-4.5zm-4.5 4.7c-1.4 0-2.5-.7-3.1-1.6v1.6h-2.6v-14.4h2.6v6.2c.6-.9 1.7-1.6 3.1-1.6 2.9 0 4.8 2.2 4.8 4.8s-1.9 4.8-4.8 4.8zM118.4 11.4h3.8l5.4 14.4h-2.9l-1.2-3.4h-6.4l-1.2 3.4h-2.9l5.4-14.4zm4.2 8.6l-2.3-6.4-2.3 6.4h4.6zM131.4 21.1c0 1.1-.7 1.7-1.8 1.7-1.1 0-1.8-.6-1.8-1.7 0-1.1.7-1.7 1.8-1.7 1.1 0 1.8.6 1.8 1.7zm2.7 0c0-2.6-1.8-4.5-4.5-4.5s-4.5 1.9-4.5 4.5 1.8 4.5 4.5 4.5 4.5-1.9 4.5-4.5zm-4.5 4.7c-1.4 0-2.5-.7-3.1-1.6v1.6h-2.6v-14.4h2.6v6.2c.6-.9 1.7-1.6 3.1-1.6 2.9 0 4.8 2.2 4.8 4.8s-1.9 4.8-4.8 4.8zM140 21.1c0 2.6-1.9 4.5-4.5 4.5s-4.5-1.9-4.5-4.5 1.9-4.5 4.5-4.5 4.5 1.9 4.5 4.5zm-2.7 0c0-1.1-.7-1.7-1.8-1.7-1.1 0-1.8.6-1.8 1.7 0 1.1.7 1.7 1.8 1.7 1.1 0 1.8-.6 1.8-1.7z"/>
-            </g>
-          </svg>
+          <Text className="text-base-semi text-ui-fg-base uppercase tracking-wider">
+            Pago con tarjeta
+          </Text>
         </div>
-        <div className="flex items-center gap-x-2">
-          <img src="https://img.icons8.com/color/48/000000/visa.png" className="h-5 w-auto grayscale transition-all hover:grayscale-0" alt="Visa" />
-          <img src="https://img.icons8.com/color/48/000000/mastercard.png" className="h-5 w-auto grayscale transition-all hover:grayscale-0" alt="Mastercard" />
-          <img src="https://img.icons8.com/color/48/000000/amex.png" className="h-5 w-auto grayscale transition-all hover:grayscale-0" alt="Amex" />
-          <img src="https://img.icons8.com/color/48/000000/diners-club.png" className="h-5 w-auto grayscale transition-all hover:grayscale-0" alt="Diners" />
+        <div className="flex items-center gap-x-3">
+          <img src="https://img.icons8.com/color/96/000000/visa.png" className="h-9 w-auto" alt="Visa" />
+          <img src="https://img.icons8.com/color/96/000000/mastercard.png" className="h-9 w-auto" alt="Mastercard" />
+          <img src="https://img.icons8.com/color/96/000000/amex.png" className="h-9 w-auto" alt="Amex" />
+          <img src="https://img.icons8.com/color/96/000000/diners-club.png" className="h-9 w-auto" alt="Diners" />
         </div>
       </div>
 
